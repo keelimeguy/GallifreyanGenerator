@@ -515,7 +515,7 @@ class Gallifreyan:
         if outward_lines_leftover:
             if len(self._words)==1:
                 xx,yy,aangle = outward_lines[outward_lines_leftover[0]]
-                dwg.add(dwg.line((xx, yy), (xo-(R)*math.cos(aangle),yo+(R)*math.sin(aangle)), stroke='black'))
+                dwg.add(dwg.line((xx, yy), (x-(R)*math.cos(aangle),y+(R)*math.sin(aangle)), stroke='black'))
             else:
                 xx,yy,aangle = outward_lines[outward_lines_leftover[0]]
                 dwg.add(dwg.line((xx, yy), (x-(R)*math.cos(aangle),y+(R)*math.sin(aangle)), stroke='black'))
