@@ -74,7 +74,7 @@ class Gallifreyan:
                 print('Warning: {} not yet implemented!'.format(self._text))
 
             # dwg.add(dwg.text(self._text, (x, y)))
-            return self._radj, self._r
+            return self._radj, self._r, ([], angle)
 
     class Sound(Punctuation):
         def precompile(self):
@@ -104,6 +104,7 @@ class Gallifreyan:
             three_lines_list = [c+v for v in ['a', 'e', 'i', 'o', 'u'] for c in ['f', 'm', 's', 'ng']]+['f', 'm', 's', 'ng']
 
             inward_lines = []
+            outward_lines = []
 
             if self._text.lower() == 'a':
                 dwg.add(dwg.circle((x+Gallifreyan.scale*math.cos(angle), y-Gallifreyan.scale*math.sin(angle)), Gallifreyan.scale/2, stroke='black', fill='none'))
@@ -121,7 +122,8 @@ class Gallifreyan:
                 dwg.add(dwg.circle((x, y), Gallifreyan.scale, stroke='black', fill='none'))
                 newxoff = Gallifreyan.scale*math.cos(angle)
                 newyoff = Gallifreyan.scale*math.sin(angle)
-                dwg.add(dwg.line((x+newxoff, y-newyoff), (x+10*newxoff, y-10*newyoff), stroke='black'))
+                # dwg.add(dwg.line((x+newxoff, y-newyoff), (x+10*newxoff, y-10*newyoff), stroke='black'))
+                outward_lines.append((x+newxoff, y-newyoff, angle))
 
             # Half circle crater
             elif self._text.lower() in half_circle_list:
@@ -141,24 +143,30 @@ class Gallifreyan:
                 elif self._text.lower() in one_line_list:
                     newx = (xs+xe)/2 - (self._r*math.pi/(2*math.sqrt(2)))*math.cos(angle+math.pi/4)
                     newy = (ys+ye)/2 + (self._r*math.pi/(2*math.sqrt(2)))*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                 elif self._text.lower() in two_lines_list:
                     newx = (xs+xe)/2 - (self._r*math.pi/(2*math.sqrt(2)))*math.cos(angle+math.pi/4)
                     newy = (ys+ye)/2 + (self._r*math.pi/(2*math.sqrt(2)))*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = (xs+xe)/2 - (self._r*math.pi/(2*math.sqrt(2)))*math.cos(angle-math.pi/4)
                     newy = (ys+ye)/2 + (self._r*math.pi/(2*math.sqrt(2)))*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                 elif self._text.lower() in three_lines_list:
                     newx = (xs+xe)/2 - (self._r*math.pi/(2*math.sqrt(2)))*math.cos(angle+math.pi/3)
                     newy = (ys+ye)/2 + (self._r*math.pi/(2*math.sqrt(2)))*math.sin(angle+math.pi/3)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = (xs+xe)/2 - (self._r*math.pi/(2*math.sqrt(2)))*math.cos(angle+math.pi/5)
                     newy = (ys+ye)/2 + (self._r*math.pi/(2*math.sqrt(2)))*math.sin(angle+math.pi/5)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = (xs+xe)/2 - (self._r*math.pi/(2*math.sqrt(2)))*math.cos(angle-math.pi/4)
                     newy = (ys+ye)/2 + (self._r*math.pi/(2*math.sqrt(2)))*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
 
                 if self._text.lower()[-1] == 'a':
                     dwg.add(dwg.circle((x+Gallifreyan.scale*math.cos(angle), y-Gallifreyan.scale*math.sin(angle)), Gallifreyan.scale/2, stroke='black', fill='none'))
@@ -176,7 +184,8 @@ class Gallifreyan:
                     dwg.add(dwg.circle((x, y), Gallifreyan.scale/2, stroke='black', fill='none'))
                     newxoff = Gallifreyan.scale/2*math.cos(angle)
                     newyoff = Gallifreyan.scale/2*math.sin(angle)
-                    dwg.add(dwg.line((x+newxoff, y-newyoff), (x+10*newxoff, y-10*newyoff), stroke='black'))
+                    # dwg.add(dwg.line((x+newxoff, y-newyoff), (x+10*newxoff, y-10*newyoff), stroke='black'))
+                    outward_lines.append((x+newxoff, y-newyoff, angle))
 
             # Circle partial inside
             elif self._text.lower() in circle_partial_list:
@@ -198,24 +207,30 @@ class Gallifreyan:
                 elif self._text.lower() in one_line_list:
                     newx = x-xoff - .9*self._r*math.cos(angle+math.pi/4)
                     newy = y+yoff + .9*self._r*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                 elif self._text.lower() in two_lines_list:
                     newx = x-xoff - .9*self._r*math.cos(angle+math.pi/4)
                     newy = y+yoff + .9*self._r*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = x-xoff - .9*self._r*math.cos(angle-math.pi/4)
                     newy = y+yoff + .9*self._r*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                 elif self._text.lower() in three_lines_list:
                     newx = x-xoff - .9*self._r*math.cos(angle+math.pi/3)
                     newy = y+yoff + .9*self._r*math.sin(angle+math.pi/3)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = x-xoff - .9*self._r*math.cos(angle+math.pi/5)
                     newy = y+yoff + .9*self._r*math.sin(angle+math.pi/5)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = x-xoff - .9*self._r*math.cos(angle-math.pi/4)
                     newy = y+yoff + .9*self._r*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
 
                 if self._text.lower()[-1] == 'a':
                     dwg.add(dwg.circle((x+Gallifreyan.scale*math.cos(angle), y-Gallifreyan.scale*math.sin(angle)), Gallifreyan.scale/2, stroke='black', fill='none'))
@@ -233,7 +248,8 @@ class Gallifreyan:
                     dwg.add(dwg.circle((x-xoff, y+yoff), Gallifreyan.scale/2, stroke='black', fill='none'))
                     newxoff = Gallifreyan.scale/2*math.cos(angle)
                     newyoff = Gallifreyan.scale/2*math.sin(angle)
-                    dwg.add(dwg.line((x-xoff+newxoff, y+yoff-newyoff), (x-xoff+10*newxoff, y+yoff-10*newyoff), stroke='black'))
+                    # dwg.add(dwg.line((x-xoff+newxoff, y+yoff-newyoff), (x-xoff+10*newxoff, y+yoff-10*newyoff), stroke='black'))
+                    outward_lines.append((x-xoff+newxoff, y+yoff-newyoff, angle))
 
             # Circle
             elif self._text.lower() in circle_list:
@@ -250,7 +266,8 @@ class Gallifreyan:
                 elif self._text.lower() in one_line_list:
                     newx = x - self._r*math.cos(angle+math.pi/4)
                     newy = y + self._r*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                 elif self._text.lower() in four_dots_list:
                     dwg.add(dwg.circle((xo+(R-self._r/2)*math.cos(angle+dangle*.5), yo-(R-self._r/2)*math.sin(angle+dangle*.5)), Gallifreyan.scale/4, stroke='black', fill='black'))
                     dwg.add(dwg.circle((xo+(R-self._r/2)*math.cos(angle-dangle*.5), yo-(R-self._r/2)*math.sin(angle-dangle*.5)), Gallifreyan.scale/4, stroke='black', fill='black'))
@@ -259,20 +276,25 @@ class Gallifreyan:
                 elif self._text.lower() in two_lines_list:
                     newx = x - self._r*math.cos(angle+math.pi/4)
                     newy = y + self._r*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = x - self._r*math.cos(angle-math.pi/4)
                     newy = y + self._r*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                 elif self._text.lower() in three_lines_list:
                     newx = x - self._r*math.cos(angle+math.pi/3)
                     newy = y + self._r*math.sin(angle+math.pi/3)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = x - self._r*math.cos(angle+math.pi/5)
                     newy = y + self._r*math.sin(angle+math.pi/5)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
                     newx = x - self._r*math.cos(angle-math.pi/4)
                     newy = y + self._r*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newx, newy), (xo, yo), stroke='black'))
+                    outward_lines.append((newx, newy, angle))
 
                 if self._text.lower()[-1] == 'a':
                     dwg.add(dwg.circle((x+Gallifreyan.scale*math.cos(angle), y-Gallifreyan.scale*math.sin(angle)), Gallifreyan.scale/2, stroke='black', fill='none'))
@@ -290,7 +312,8 @@ class Gallifreyan:
                     dwg.add(dwg.circle((x, y), Gallifreyan.scale/2, stroke='black', fill='none'))
                     newxoff = Gallifreyan.scale/2*math.cos(angle)
                     newyoff = Gallifreyan.scale/2*math.sin(angle)
-                    dwg.add(dwg.line((x+newxoff, y-newyoff), (x+10*newxoff, y-10*newyoff), stroke='black'))
+                    # dwg.add(dwg.line((x+newxoff, y-newyoff), (x+10*newxoff, y-10*newyoff), stroke='black'))
+                    outward_lines.append((x+newxoff, y-newyoff, angle))
 
             # Circle inside
             elif self._text.lower() in circle_inside_list:
@@ -316,24 +339,30 @@ class Gallifreyan:
                 elif self._text.lower() in one_line_list:
                     newxx = newx - self._r*math.cos(angle+math.pi/4)
                     newyy = newy + self._r*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    outward_lines.append((newxx, newyy, angle))
                 elif self._text.lower() in two_lines_list:
                     newxx = newx - self._r*math.cos(angle+math.pi/4)
                     newyy = newy + self._r*math.sin(angle+math.pi/4)
-                    dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    outward_lines.append((newxx, newyy, angle))
                     newxx = newx - self._r*math.cos(angle-math.pi/4)
                     newyy = newy + self._r*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    outward_lines.append((newxx, newyy, angle))
                 elif self._text.lower() in three_lines_list:
                     newxx = newx - self._r*math.cos(angle+math.pi/3)
                     newyy = newy + self._r*math.sin(angle+math.pi/3)
-                    dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    outward_lines.append((newxx, newyy, angle))
                     newxx = newx - self._r*math.cos(angle+math.pi/5)
                     newyy = newy + self._r*math.sin(angle+math.pi/5)
-                    dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    outward_lines.append((newxx, newyy, angle))
                     newxx = newx - self._r*math.cos(angle-math.pi/4)
                     newyy = newy + self._r*math.sin(angle-math.pi/4)
-                    dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    # dwg.add(dwg.line((newxx, newyy), (xo, yo), stroke='black'))
+                    outward_lines.append((newxx, newyy, angle))
 
                 if self._text.lower()[-1] == 'a':
                     dwg.add(dwg.circle((x+Gallifreyan.scale*math.cos(angle), y-Gallifreyan.scale*math.sin(angle)), Gallifreyan.scale/2, stroke='black', fill='none'))
@@ -351,12 +380,13 @@ class Gallifreyan:
                     dwg.add(dwg.circle((x-(self._r*1.1)*math.cos(angle), y+(self._r*1.1)*math.sin(angle)), Gallifreyan.scale/2, stroke='black', fill='none'))
                     newxoff = Gallifreyan.scale/2*math.cos(angle)
                     newyoff = Gallifreyan.scale/2*math.sin(angle)
-                    dwg.add(dwg.line((x-(self._r*1.1)*math.cos(angle)+newxoff, y+(self._r*1.1)*math.sin(angle)-newyoff), (x-(self._r*1.1)*math.cos(angle)+10*newxoff, y+(self._r*1.1)*math.sin(angle)-10*newyoff), stroke='black'))
+                    # dwg.add(dwg.line((x-(self._r*1.1)*math.cos(angle)+newxoff, y+(self._r*1.1)*math.sin(angle)-newyoff), (x-(self._r*1.1)*math.cos(angle)+10*newxoff, y+(self._r*1.1)*math.sin(angle)-10*newyoff), stroke='black'))
+                    outward_lines.append((x-(self._r*1.1)*math.cos(angle)+newxoff, y+(self._r*1.1)*math.sin(angle)-newyoff), angle)
 
             else:
                 print('Warning: {} not yet implemented!'.format(self._text))
 
-            return inward_lines
+            return inward_lines, outward_lines
 
     class Word:
         def __init__(self, text):
@@ -388,15 +418,20 @@ class Gallifreyan:
 
         def compile(self, x, y, R, xo, yo, angle, dwg):
             inward_lines = []
+            outward_lines = []
             for sound in self._sounds:
                 sound.precompile()
             if len(self._sounds) == 1:
-                    inward_lines+=self._sounds[0].compile(x, y, R, xo, yo, angle, dwg)
+                    new_inward_lines, new_outward_lines = self._sounds[0].compile(x, y, R, xo, yo, angle, dwg)
+                    inward_lines += new_inward_lines
+                    outward_lines += new_outward_lines
             else:
                 dwg.add(dwg.circle((x, y), self._r, stroke='black', fill='none'))
                 for i in range(len(self._sounds)):
                     angle = i*2*math.pi/len(self._sounds)-math.pi/2
-                    inward_lines+=self._sounds[i].compile(x+math.cos(angle)*self._r, y-math.sin(angle)*self._r, self._r, x, y, angle, dwg)
+                    new_inward_lines, new_outward_lines = self._sounds[i].compile(x+math.cos(angle)*self._r, y-math.sin(angle)*self._r, self._r, x, y, angle, dwg)
+                    inward_lines += new_inward_lines
+                    outward_lines += new_outward_lines
 
             i = 1
             inward_lines_leftover = list(range(len(inward_lines)))
@@ -417,7 +452,7 @@ class Gallifreyan:
                     dwg.add(dwg.line((xx, yy), (x-(self._r)*math.cos(aangle),y+(self._r)*math.sin(aangle)), stroke='black'))
 
             # dwg.add(dwg.text(self._text, (x, y)))
-            return self._radj, self._r
+            return self._radj, self._r, (outward_lines, angle)
 
     def __init__(self, text):
         self._text = text
@@ -447,10 +482,13 @@ class Gallifreyan:
             R *= math.sqrt(2)*.8
         x = y = R*math.sqrt(2)
         angle = -math.pi/2
+        outward_lines = []
         for i in range(len(self._words)):
             # angle = i*2*math.pi/len(self._words)-math.pi/2
             if not (isinstance(self._words[i], self.Punctuation) or len(self._words[i])==1):
-                self._words[i].compile(x+math.cos(angle)*(R-1.1*self._words[i]._r), y-math.sin(angle)*(R-1.1*self._words[i]._r), R, x, y, angle, dwg)
+                compile_ret = self._words[i].compile(x+math.cos(angle)*(R-1.1*self._words[i]._r), y-math.sin(angle)*(R-1.1*self._words[i]._r), R, x, y, angle, dwg)
+                if compile_ret[2][0]:
+                    outward_lines+=compile_ret[2][0]
             angle += math.pi*(self._words[i]._r+(self._words[i+1]._r if i < len(self._words)-1 else 0))/(Rorig)
         if len(self._words)>1:
             dwg.add(dwg.circle((x, y), R, stroke='black', fill='none'))
@@ -458,8 +496,31 @@ class Gallifreyan:
         for i in range(len(self._words)):
             # angle = i*2*math.pi/len(self._words)-math.pi/2
             if isinstance(self._words[i], self.Punctuation) or len(self._words[i])==1:
-                self._words[i].compile(x+math.cos(angle)*R, y-math.sin(angle)*R, R, x, y, angle, dwg)
+                compile_ret = self._words[i].compile(x+math.cos(angle)*R, y-math.sin(angle)*R, R, x, y, angle, dwg)
+                if compile_ret[2][0]:
+                    outward_lines+=compile_ret[2][0]
             angle += math.pi*(self._words[i]._r+(self._words[i+1]._r if i < len(self._words)-1 else 0))/(Rorig)
+        print(outward_lines)
+
+        i = 0
+        outward_lines_leftover = list(range(len(outward_lines)))
+        while len(outward_lines_leftover)>1:
+            j = (i+int(len(outward_lines)/2))%len(outward_lines)
+            if j not in outward_lines_leftover:
+                j=(j+1)%len(outward_lines)
+            dwg.add(dwg.line(outward_lines[i][:2], outward_lines[j][:2], stroke='black'))
+            outward_lines_leftover.remove(i)
+            outward_lines_leftover.remove(j)
+            i=(i+1)%len(outward_lines)
+        if outward_lines_leftover:
+            if len(self._words)==1:
+                xx,yy,aangle = outward_lines[outward_lines_leftover[0]]
+                dwg.add(dwg.line((xx, yy), (xo-(R)*math.cos(aangle),yo+(R)*math.sin(aangle)), stroke='black'))
+            else:
+                xx,yy,aangle = outward_lines[outward_lines_leftover[0]]
+                dwg.add(dwg.line((xx, yy), (x-(R)*math.cos(aangle),y+(R)*math.sin(aangle)), stroke='black'))
+
+
         dwg.save()
 
 
